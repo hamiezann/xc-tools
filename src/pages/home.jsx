@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 // import ToolCard from './../components/Card.jsx';
 // import BasicModal from '../components/Modal.jsx';
 import ApiService from '../services/api.jsx';
-import ToolCard from '../components/Card.jsx';
+import ToolCard from '../components/card.jsx';
 import BasicModal from '../components/Modal.jsx';
 
 function Home() {
