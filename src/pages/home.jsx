@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { User, Clock, Sparkles, Code, Zap, MapPin, Plane, X, Github, Linkedin, Mail } from 'lucide-react'; // Added X for close icon
 import Modal from 'react-modal';
-import ToolCard from './../components/Card.jsx';
-import BasicModal from '../components/Modal.jsx';
+// import ToolCard from './../components/Card.jsx';
+// import BasicModal from '../components/Modal.jsx';
 import ApiService from '../services/api.jsx';
+import ToolCard from '../components/Card.jsx';
+import BasicModal from '../components/Modal.jsx';
 
 function Home() {
 
