@@ -14,7 +14,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<LoginForm />} />
       <Route path="/my-portfolio" element={<MyPortfolio />} />
-      <Route path="/not-found" element={<NotFoundPage />} />
+      <Route path="/error404-page" element={<NotFoundPage />} />
     </Routes>
   )
 }
