@@ -8,6 +8,7 @@ function MyPortfolio() {
     const [serviceList, setServiceList] = useState([]);
     const [openItemId, setOpenItemId] = useState(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [projects, setProjects] = useState([]);
 
     useEffect(() => {
 
@@ -19,7 +20,9 @@ function MyPortfolio() {
             const response = await ApiService.fetchPortfolio();
             setMyPortfolio(response.portfolio[0] || []);
             setServiceList(response.portfolio[0].servicesList);
-            // console.log("Portfolio data:", response.portfolio[0]);
+            setProjects(response.portfolio[0].projects);
+
+            console.log("Portfolio data:", response.portfolio[0]);
             setIsLoaded(true);
             const homeSection = document.getElementById('home');
             if (homeSection) homeSection.scrollIntoView({ behavior: 'auto', block: 'start' });
@@ -46,6 +49,40 @@ function MyPortfolio() {
     }
     const word = "Hello";
     const lettersBounce = word.split("");
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const openProjectModal = (project) => {
+        setSelectedProject(project);
+        setCurrentImageIndex(0);
+    }
+
+    const closeProjectModal = () => {
+        setSelectedProject(null);
+        setCurrentImageIndex(0);
+    }
+
+    const nextImage = () => {
+        if (selectedProject && Array.isArray(selectedProject.image)) {
+            setCurrentImageIndex((prev) =>
+                (prev + 1) % selectedProject.image.length
+            );
+        }
+    }
+
+    const prevImage = () => {
+        if (selectedProject && Array.isArray(selectedProject.image)) {
+            setCurrentImageIndex((prev) =>
+                prev === 0 ? selectedProject.image.length - 1 : prev - 1
+            );
+        }
+    }
+
+    const getProjectImage = (project) => {
+        if (Array.isArray(project.image) && project.image.length > 0) {
+            return project.image[0].src;
+        }
+        return project.image || null;
+    }
 
     return (
         <div className={`min-h-screen bg-gradient-to-br ${myPortfolio.backgroundColor} animate-gradient-xy text-gray-900`}>
@@ -258,22 +295,237 @@ function MyPortfolio() {
                 </div>
             </section>
 
-            <section className="py-20 " id="work">
-                <div className="max-w-4xl mx-auto px-6">
+            {/* work section */}
+            <section className="py-20 bg-gradient-to-tr from-sky-300 via-pink-300 to-slate-200 " id="work">
+
+                <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-light mb-4">My Work</h2>
                         <p className="text-gray-600 max-w-2xl mx-auto">
                             Here are some of my recent projects that showcase my skills in frontend development,
                             UI/UX design, and problem-solving capabilities.
                         </p>
-                        <p>
-                            BUT DO STAY TUNED FOR THE UPDATE!
-                            NOT FINISH YET HEHE
-                        </p>
-
                     </div>
+
+                    {projects.length > 0 ? (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+                            {projects.map((project) => (
+                                <div key={project.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                                    <div className="relative overflow-hidden h-56 cursor-pointer" onClick={() => openProjectModal(project)}>
+                                        {getProjectImage(project) ? (
+                                            <img
+                                                src={getProjectImage(project)}
+                                                alt={project.title}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                                <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                            <span className="text-white text-sm font-medium">View Details</span>
+                                        </div>
+                                        {Array.isArray(project.image) && project.image.length > 1 && (
+                                            <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                                                +{project.image.length} photos
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold mb-2 text-gray-900">{project.title}</h3>
+                                        <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">{project.description}</p>
+
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {project.tags && project.tags.slice(0, 4).map((tag) => (
+                                                <span key={tag} className="px-3 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                            {project.tags && project.tags.length > 4 && (
+                                                <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+                                                    +{project.tags.length - 4}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={() => openProjectModal(project)}
+                                                className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2"
+                                            >
+                                                <span>View Details</span>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </button>
+                                            {project.source && (
+                                                <button
+                                                    onClick={() => handleRedirect(project.source)}
+                                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-16">
+                            <div className="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-6">
+                                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-medium text-gray-900 mb-2">No Projects Yet</h3>
+                            <p className="text-gray-600 max-w-md mx-auto">
+                                Projects will appear here once loaded from the API.
+                            </p>
+                        </div>
+                    )}
                 </div>
             </section>
+
+            {/* Project Modal */}
+            {selectedProject && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn" onClick={closeProjectModal}>
+                    <div className="bg-gradient-to-br bg-blue-300 to-blue-50 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-slideUp" onClick={(e) => e.stopPropagation()}>
+                        {/* Modal Header */}
+                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+                            <h3 className="text-2xl font-semibold text-gray-900">{selectedProject.title}</h3>
+                            <button
+                                onClick={closeProjectModal}
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            >
+                                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="p-6">
+                            {/* Image Gallery */}
+                            {Array.isArray(selectedProject.image) && selectedProject.image.length > 0 ? (
+                                <div className="relative mb-6 group">
+                                    <div className="relative h-80 bg-gray-100 rounded-xl overflow-hidden">
+                                        <img
+                                            src={selectedProject.image[currentImageIndex].src}
+                                            alt={selectedProject.image[currentImageIndex].desc}
+                                            className="w-full h-full object-contain"
+                                        />
+                                        {selectedProject.image.length > 1 && (
+                                            <>
+                                                <button
+                                                    onClick={prevImage}
+                                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100"
+                                                >
+                                                    <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    onClick={nextImage}
+                                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100"
+                                                >
+                                                    <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    {selectedProject.image[currentImageIndex].desc && (
+                                        <p className="text-center text-sm text-gray-600 mt-2">
+                                            {selectedProject.image[currentImageIndex].desc}
+                                        </p>
+                                    )}
+                                    {selectedProject.image.length > 1 && (
+                                        <div className="flex justify-center gap-2 mt-4">
+                                            {selectedProject.image.map((_, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => setCurrentImageIndex(index)}
+                                                    className={`h-2 rounded-full transition-all ${index === currentImageIndex
+                                                        ? 'w-8 bg-gray-800'
+                                                        : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                                        }`}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : selectedProject.image && (
+                                <div className="mb-6">
+                                    <img
+                                        src={selectedProject.image}
+                                        alt={selectedProject.title}
+                                        className="w-full h-80 object-cover rounded-xl"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Description */}
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold mb-2 text-gray-900">About This Project</h4>
+                                <p className="text-gray-700 leading-relaxed">{selectedProject.description}</p>
+                            </div>
+
+                            {/* Features */}
+                            {selectedProject.features && selectedProject.features.length > 0 && (
+                                <div className="mb-6">
+                                    <h4 className="text-lg font-semibold mb-3 text-gray-900">Key Features</h4>
+                                    <ul className="space-y-2">
+                                        {selectedProject.features.map((feature, index) => (
+                                            <li key={index} className="flex items-start space-x-3">
+                                                <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="text-gray-700">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Technologies */}
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold mb-3 text-gray-900">Technologies Used</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {selectedProject.tags && selectedProject.tags.map((tag) => (
+                                        <span key={tag} className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Action Button */}
+                            {selectedProject.source && (
+                                <div className="pt-4 border-t border-gray-200">
+                                    <button
+                                        onClick={() => handleRedirect(selectedProject.source)}
+                                        className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2"
+                                    >
+                                        <span>View Live Project</span>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Contact Section */}
             <section className="py-20 bg-white" id="contact">
