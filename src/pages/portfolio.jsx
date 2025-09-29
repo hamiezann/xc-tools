@@ -109,7 +109,7 @@ function MyPortfolio() {
             </nav>
 
             {/* Hero Section */}
-            <section className="pt-24 pb-16" id="home">
+            <section className="pt-24 pb-16 min-h-screen" id="home">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid lg:grid-cols-2 gap-0 items-center min-h-[70vh]">
                         {/* Left Content */}
