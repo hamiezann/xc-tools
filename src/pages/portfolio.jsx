@@ -10,7 +10,7 @@ function MyPortfolio() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
-        setIsLoaded(true);
+
         fetchPortfolioData();
     }, []);
 
@@ -19,7 +19,11 @@ function MyPortfolio() {
             const response = await ApiService.fetchPortfolio();
             setMyPortfolio(response.portfolio[0] || []);
             setServiceList(response.portfolio[0].servicesList);
-            console.log("Portfolio data:", response.portfolio[0]);
+            // console.log("Portfolio data:", response.portfolio[0]);
+            setIsLoaded(true);
+            const homeSection = document.getElementById('home');
+            if (homeSection) homeSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+
         } catch (error) {
             console.error("Failed to fetch portfolio data:", error);
         }
