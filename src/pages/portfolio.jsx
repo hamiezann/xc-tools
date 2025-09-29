@@ -22,7 +22,7 @@ function MyPortfolio() {
             setServiceList(response.portfolio[0].servicesList);
             setProjects(response.portfolio[0].projects);
 
-            console.log("Portfolio data:", response.portfolio[0]);
+            // console.log("Portfolio data:", response.portfolio[0]);
             setIsLoaded(true);
             const homeSection = document.getElementById('home');
             if (homeSection) homeSection.scrollIntoView({ behavior: 'auto', block: 'start' });
@@ -64,7 +64,7 @@ function MyPortfolio() {
     const nextImage = () => {
         if (selectedProject && Array.isArray(selectedProject.image)) {
             setCurrentImageIndex((prev) =>
-                (prev + 1) % selectedProject.image.length
+                (prev + 1) % selectedProject.image?.length
             );
         }
     }
@@ -72,13 +72,13 @@ function MyPortfolio() {
     const prevImage = () => {
         if (selectedProject && Array.isArray(selectedProject.image)) {
             setCurrentImageIndex((prev) =>
-                prev === 0 ? selectedProject.image.length - 1 : prev - 1
+                prev === 0 ? selectedProject.image?.length - 1 : prev - 1
             );
         }
     }
 
     const getProjectImage = (project) => {
-        if (Array.isArray(project.image) && project.image.length > 0) {
+        if (Array.isArray(project.image) && project.image?.length > 0) {
             return project.image[0].src;
         }
         return project.image || null;
@@ -307,7 +307,7 @@ function MyPortfolio() {
                         </p>
                     </div>
 
-                    {projects.length > 0 ? (
+                    {projects?.length > 0 ? (
                         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
                             {projects.map((project) => (
                                 <div key={project.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
