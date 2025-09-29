@@ -10,15 +10,15 @@ Modal.setAppElement('#root'); // Set the app element for accessibility
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/my-portfolio" element={<MyPortfolio />} />
-        <Route path="/error404-page" element={<NotFoundPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </BrowserRouter>
+
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/my-portfolio" element={<MyPortfolio />} />
+      <Route path="/error404-page" element={<NotFoundPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+
   )
 }
 
