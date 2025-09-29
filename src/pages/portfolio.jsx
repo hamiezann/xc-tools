@@ -296,7 +296,7 @@ function MyPortfolio() {
             </section>
 
             {/* work section */}
-            <section className="py-20 bg-gradient-to-tr from-sky-300 via-pink-300 to-slate-200 " id="work">
+            <section className="py-20 bg-gradient-to-tr from-sky-300  to-slate-200 " id="work">
 
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-16">
