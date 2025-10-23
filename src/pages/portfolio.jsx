@@ -168,7 +168,7 @@ function MyPortfolio() {
                             <div className="flex flex-wrap items-center gap-4 pt-4">
                                 <button
                                     className="inline-flex items-center space-x-2 bg-gray-900 text-white px-6 py-3 rounded-full font-medium hover:bg-gray-700 transition-colors"
-                                    onClick={() => handleRedirect(myPortfolio.resumeLink ? myPortfolio.resumeLink : '/error404-page')}
+                                    onClick={() => window.open(myPortfolio.resumeLink || '/error404-page', '_blank')}
                                 >
                                     <span>Download CV</span>
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
