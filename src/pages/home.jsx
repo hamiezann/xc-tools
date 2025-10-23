@@ -132,7 +132,7 @@ function Home() {
                                 Dev with <span className='text-red-400'>❤️</span> by XC
                             </p>
                             <p className='text-sm text-slate-500'>
-                                Continuously Evolving and Elongating
+                                Continuously Evolving and Elevate
                             </p>
                         </div>
                         <div className='flex items-center gap-4'>
